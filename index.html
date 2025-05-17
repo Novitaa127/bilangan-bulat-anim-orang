@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Orang Melangkah di Garis Bilangan</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      padding: 30px;
+    }
+
+    #line {
+      position: relative;
+      width: 880px;
+      height: 100px;
+      margin: auto;
+      border-top: 3px solid black;
+      margin-bottom: 40px;
+    }
+
+    .tick {
+      position: absolute;
+      top: -8px;
+      width: 2px;
+      height: 20px;
+      background: black;
+    }
+
+    .label {
+      position: absolute;
+      top: 20px;
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    #person {
+      position: absolute;
+      top: -40px;
+      font-size: 32px;
+      transition: left 0.4s ease;
+    }
+
+    button {
+      margin: 10px 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #3498db;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Animasi Orang Melangkah di Garis Bilangan</h2>
+  <p>Gunakan tombol untuk menggerakkan tokoh!</p>
+
+  <div id="line">
+    <div id="person">🚶</div>
+  </div>
+
+  <div>
+    <button onclick="step(-1)">← Mundur</button>
+    <button onclick="reset()">⭮ Reset</button>
+    <button onclick="step(1)">Maju →</button>
+  </div>
+
+  <h3>Posisi Saat Ini: <span id="pos">0</span></h3>
+
+  <script>
+    const line = document.getElementById('line');
+    const person = document.getElementById('person');
+    const posText = document.getElementById('pos');
+
+    const min = -10;
+    const max = 10;
+    const spacing = 40;
+    let position = 0;
+
+    function drawTicks() {
+      for (let i = min; i <= max; i++) {
+        const tick = document.createElement('div');
+        tick.className = 'tick';
+        tick.style.left = (i - min) * spacing + 'px';
+
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.style.left = (i - min) * spacing + 'px';
+        label.textContent = i;
+
+        line.appendChild(tick);
+        line.appendChild(label);
+      }
+    }
+
+    function updatePerson() {
+      const x = (position - min) * spacing;
+      person.style.left = x + 'px';
+      posText.textContent = position;
+    }
+
+    function step(val) {
+      if (position + val >= min && position + val <= max) {
+        position += val;
+        updatePerson();
+      }
+    }
+
+    function reset() {
+      position = 0;
+      updatePerson();
+    }
+
+    drawTicks();
+    updatePerson();
+  </script>
+
+</body>
+</html>
