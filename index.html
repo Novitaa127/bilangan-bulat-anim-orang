@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <title>Orang Melangkah - Arah Benar</title>
+  <meta charset="UTF-8">
+  <title>Orang Melangkah - Hadap Benar</title>
   <style>
     body {
       font-family: sans-serif;
@@ -42,6 +42,14 @@
       transition: left 0.4s ease;
     }
 
+    .facing-right {
+      transform: scaleX(1);
+    }
+
+    .facing-left {
+      transform: scaleX(-1);
+    }
+
     button {
       margin: 10px 5px;
       padding: 10px 20px;
@@ -61,10 +69,10 @@
 <body>
 
   <h2>Orang Melangkah di Garis Bilangan</h2>
-  <p>Klik tombol untuk menggerakkan tokoh!</p>
+  <p>Klik tombol untuk gerakkan orang dengan arah yang benar!</p>
 
   <div id="line">
-    <div id="person">🚶</div>
+    <div id="person" class="facing-right">🚶</div>
   </div>
 
   <div>
@@ -105,10 +113,13 @@
       const x = (position - min) * spacing;
       person.style.left = x + 'px';
 
+      // Arah visual
       if (direction < 0) {
-        person.textContent = '🚶‍♂️'; // menghadap kiri
+        person.classList.remove('facing-right');
+        person.classList.add('facing-left');
       } else if (direction > 0) {
-        person.textContent = '🚶'; // menghadap kanan
+        person.classList.remove('facing-left');
+        person.classList.add('facing-right');
       }
 
       posText.textContent = position;
