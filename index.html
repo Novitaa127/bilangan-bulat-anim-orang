@@ -1,144 +1,131 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Orang Melangkah - Hadap Benar</title>
+  <meta charset="UTF-8" />
+  <title>Kuis Bilangan Bulat</title>
   <style>
     body {
       font-family: sans-serif;
-      text-align: center;
-      background: #f0f0f0;
+      background: #f4f6f8;
       padding: 30px;
+      text-align: center;
     }
 
-    #line {
-      position: relative;
-      width: 880px;
-      height: 100px;
+    .quiz-box {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 600px;
       margin: auto;
-      border-top: 3px solid black;
-      margin-bottom: 40px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
-    .tick {
-      position: absolute;
-      top: -8px;
-      width: 2px;
-      height: 20px;
-      background: black;
+    h2 {
+      margin-bottom: 20px;
     }
 
-    .label {
-      position: absolute;
-      top: 20px;
-      transform: translateX(-50%);
-      font-size: 14px;
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
     }
 
-    #person {
-      position: absolute;
-      top: -40px;
-      font-size: 32px;
-      transition: left 0.4s ease;
-    }
-
-    .facing-right {
-      transform: scaleX(1);
-    }
-
-    .facing-left {
-      transform: scaleX(-1);
-    }
-
-    button {
-      margin: 10px 5px;
-      padding: 10px 20px;
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 5px auto;
+      padding: 10px;
       font-size: 16px;
-      background: #3498db;
       border: none;
-      border-radius: 8px;
+      background: #3498db;
       color: white;
+      border-radius: 6px;
       cursor: pointer;
     }
 
-    button:hover {
+    .options button:hover {
       background: #2980b9;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <h2>Orang Melangkah di Garis Bilangan</h2>
-  <p>Klik tombol untuk gerakkan orang dengan arah yang benar!</p>
-
-  <div id="line">
-    <div id="person" class="facing-right">🚶</div>
+  <div class="quiz-box">
+    <h2>Kuis Bilangan Bulat</h2>
+    <div class="question" id="question">Memuat soal...</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
   </div>
-
-  <div>
-    <button onclick="step(-1)">← Mundur</button>
-    <button onclick="reset()">⭮ Reset</button>
-    <button onclick="step(1)">Maju →</button>
-  </div>
-
-  <h3>Posisi Saat Ini: <span id="pos">0</span></h3>
 
   <script>
-    const line = document.getElementById('line');
-    const person = document.getElementById('person');
-    const posText = document.getElementById('pos');
-
-    const min = -10;
-    const max = 10;
-    const spacing = 40;
-    let position = 0;
-
-    function drawTicks() {
-      for (let i = min; i <= max; i++) {
-        const tick = document.createElement('div');
-        tick.className = 'tick';
-        tick.style.left = (i - min) * spacing + 'px';
-
-        const label = document.createElement('div');
-        label.className = 'label';
-        label.style.left = (i - min) * spacing + 'px';
-        label.textContent = i;
-
-        line.appendChild(tick);
-        line.appendChild(label);
+    const questions = [
+      {
+        q: "Budi berdiri di titik 0. Ia melangkah +5, lalu -3, lalu +2. Di titik berapa Budi sekarang?",
+        options: ["+4", "+3", "0", "-1"],
+        answer: "+4"
+      },
+      {
+        q: "Suhu ruangan 20°C diturunkan 25°C, lalu dinaikkan 10°C. Berapa suhu sekarang?",
+        options: ["-5°C", "5°C", "10°C", "0°C"],
+        answer: "5°C"
+      },
+      {
+        q: "Seekor lumba-lumba melompat 4 m lalu menyelam 9 m. Berapa selisih total ketinggiannya?",
+        options: ["5 m", "13 m", "9 m", "4 m"],
+        answer: "13 m"
+      },
+      {
+        q: "Bilangan manakah yang lebih besar?",
+        options: ["-8", "-3", "-10", "-12"],
+        answer: "-3"
       }
+    ];
+
+    let current = 0;
+
+    function loadQuestion() {
+      const qBox = document.getElementById("question");
+      const optBox = document.getElementById("options");
+      const fb = document.getElementById("feedback");
+      fb.textContent = "";
+
+      const q = questions[current];
+      qBox.textContent = `Soal ${current + 1}: ${q.q}`;
+      optBox.innerHTML = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          if (opt === q.answer) {
+            fb.textContent = "✅ Jawaban benar!";
+            fb.style.color = "green";
+          } else {
+            fb.textContent = `❌ Salah. Jawaban yang benar: ${q.answer}`;
+            fb.style.color = "red";
+          }
+
+          setTimeout(() => {
+            current++;
+            if (current < questions.length) {
+              loadQuestion();
+            } else {
+              qBox.textContent = "Kuis selesai!";
+              optBox.innerHTML = "";
+              fb.innerHTML = "Terima kasih sudah mengerjakan!";
+              fb.style.color = "#333";
+            }
+          }, 1500);
+        };
+        optBox.appendChild(btn);
+      });
     }
 
-    function updatePerson(direction = 0) {
-      const x = (position - min) * spacing;
-      person.style.left = x + 'px';
-
-      // Arah visual
-      if (direction < 0) {
-        person.classList.remove('facing-right');
-        person.classList.add('facing-left');
-      } else if (direction > 0) {
-        person.classList.remove('facing-left');
-        person.classList.add('facing-right');
-      }
-
-      posText.textContent = position;
-    }
-
-    function step(val) {
-      if (position + val >= min && position + val <= max) {
-        position += val;
-        updatePerson(val);
-      }
-    }
-
-    function reset() {
-      position = 0;
-      updatePerson(0);
-    }
-
-    drawTicks();
-    updatePerson();
+    loadQuestion();
   </script>
 
 </body>
