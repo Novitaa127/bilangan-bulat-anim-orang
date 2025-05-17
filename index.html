@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Orang Melangkah di Garis Bilangan</title>
+  <title>Orang Melangkah - Arah Benar</title>
   <style>
     body {
       font-family: sans-serif;
@@ -60,8 +60,8 @@
 </head>
 <body>
 
-  <h2>Animasi Orang Melangkah di Garis Bilangan</h2>
-  <p>Gunakan tombol untuk menggerakkan tokoh!</p>
+  <h2>Orang Melangkah di Garis Bilangan</h2>
+  <p>Klik tombol untuk menggerakkan tokoh!</p>
 
   <div id="line">
     <div id="person">🚶</div>
@@ -101,22 +101,29 @@
       }
     }
 
-    function updatePerson() {
+    function updatePerson(direction = 0) {
       const x = (position - min) * spacing;
       person.style.left = x + 'px';
+
+      if (direction < 0) {
+        person.textContent = '🚶‍♂️'; // menghadap kiri
+      } else if (direction > 0) {
+        person.textContent = '🚶'; // menghadap kanan
+      }
+
       posText.textContent = position;
     }
 
     function step(val) {
       if (position + val >= min && position + val <= max) {
         position += val;
-        updatePerson();
+        updatePerson(val);
       }
     }
 
     function reset() {
       position = 0;
-      updatePerson();
+      updatePerson(0);
     }
 
     drawTicks();
