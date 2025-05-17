@@ -1,1 +1,1 @@
-# bilangan-bulat-anim-orang
+# bilangan-bulat-kuis
